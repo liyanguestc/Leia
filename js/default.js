@@ -2,6 +2,8 @@
      windowHeight = window.innerHeight;
  var camera, renderer, scene;
 var meshArray = [];
+var omega1 =  1.032;
+var omega2 = -3.729;
 
  head.ready(function() {
      Init();
@@ -53,11 +55,12 @@ var meshArray = [];
      for (var i = 0; i < meshArray.length; i++) {
          var curMeshGroup = meshArray[i].meshGroup;
          switch (meshArray[i].name) {
-           case "helloworld":
-              curMeshGroup.rotation.x = 0.8 * Math.sin(5.0 * LEIA.time);
-              curMeshGroup.rotation.z = 0.6 * 0.6 * Math.sin(3.0 * LEIA.time);
+           case "LEIA1":
+              curMeshGroup.position.set(0, 0, 0); 
+		      curMeshGroup.rotation.y = 2.0*(omega1*LEIA.time);
+		      curMeshGroup.rotation.z = -Math.sin(omega1*LEIA.time)*0.8;
              break;
-              default:
+            default:
                  break;
          }
      }
@@ -79,19 +82,19 @@ var meshArray = [];
  function addObjectsToScene() {
      //Add your objects here
       //add STL Object
-     /*addSTLModel({
-         path: 'resource/Cube.stl',
-         meshGroupName: 'Cube',
-         meshSizeX: 30,
-         meshSizeY: 30,
-         meshSizeZ: 30,
+     addSTLModel({
+         path: 'resource/LEIA1.stl',
+         meshGroupName: 'LEIA1',
+         meshSizeX: 60,
+         meshSizeY: 60,
+         meshSizeZ: 60,
          translateX: 0,
          translateY: 0,
          translateZ: 0,
-     });*/
+     });
    
     //Add Text
-    addTextMenu({
+   /* addTextMenu({
       text: "Hello",
       name: "helloworld",
       size: 15,
@@ -101,10 +104,12 @@ var meshArray = [];
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0
-    });
+    });*/
    
    //add background texture
-   LEIA_setBackgroundPlane('resource/brickwall_900x600_small.jpg');
+   LEIA_setBackgroundPlane('resource/world-map-background2.jpg');
+   LEIA_setCenterPlane('resource/crack001.png');
+  // LEIA_setBackgroundPlane('resource/brickwall_900x600_small.jpg');
  }
 
 function addTextMenu(parameters){
@@ -170,17 +175,13 @@ function addTextMenu(parameters){
 
  function addLights() {
      //Add Lights Here
-      var light = new THREE.SpotLight(0xffffff);
-    //light.color.setHSL( Math.random(), 1, 0.5 );
-    light.position.set(0, 60, 60);
-    light.shadowCameraVisible = false;
-    light.castShadow = true;
-    light.shadowMapWidth = light.shadowMapHeight = 256;
-    light.shadowDarkness = 0.7;
-    scene.add(light);
-
-    var ambientLight = new THREE.AmbientLight(0x222222);
-    scene.add(ambientLight);
+     var xl = new THREE.DirectionalLight( 0xffffff );
+	xl.position.set( 1, 0, 2 );
+	scene.add( xl );
+			
+	var pl = new THREE.PointLight(0x555555);
+	pl.position.set(-20, 10, 20);
+	scene.add(pl);
  }
 
  function addSTLModel(parameters) { //(filename, meshName, meshSize) {
@@ -248,3 +249,20 @@ function LEIA_setBackgroundPlane(filename, aspect) {
     scene.add(plane);
 }
 
+function LEIA_setCenterPlane(filename, aspect){
+	var LEIA_centerPlaneTexture = new THREE.ImageUtils.loadTexture( filename );
+	LEIA_centerPlaneTexture.wrapS = LEIA_centerPlaneTexture.wrapT = THREE.RepeatWrapping; 
+	LEIA_centerPlaneTexture.repeat.set( 1, 1 );
+	var LEIA_centerPlaneMaterial = new THREE.MeshPhongMaterial( { map: LEIA_centerPlaneTexture, transparent:true, side: THREE.DoubleSide } );
+	var LEIA_centerPlaneGeometry;
+	if (aspect === undefined) {
+		LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(80, 60, 10, 10);
+	} else {
+		LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(10*aspect, 30, 10, 10);
+	}
+	LEIA_centerPlane = new THREE.Mesh(LEIA_centerPlaneGeometry, LEIA_centerPlaneMaterial);
+	LEIA_centerPlane.position.x = 0;
+	LEIA_centerPlane.position.y = 0;
+	LEIA_centerPlane.position.z = 0;
+	scene.add(LEIA_centerPlane);
+}
