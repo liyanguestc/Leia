@@ -107,8 +107,17 @@ var omega2 = -3.729;
     });*/
    
    //add background texture
-   LEIA_setBackgroundPlane('resource/world-map-background2.jpg');
-   LEIA_setCenterPlane('resource/crack001.png');
+   var backgroundPlane = LEIA_createTexturePlane({filename:'resource/world-map-background2.jpg',width:100,height:75});
+    backgroundPlane.position.z = -6;
+    backgroundPlane.castShadow = false;
+    backgroundPlane.receiveShadow = true;
+    scene.add(backgroundPlane);
+   
+    var centerPlane = LEIA_createTexturePlane({filename:'resource/crack001.png',width:100,height:75,transparent:true});
+    scene.add(centerPlane);
+   
+   //LEIA_setBackgroundPlane('resource/world-map-background2.jpg');
+   //LEIA_setCenterPlane('resource/crack001.png');
   // LEIA_setBackgroundPlane('resource/brickwall_900x600_small.jpg');
  }
 
@@ -231,29 +240,13 @@ function addTextMenu(parameters){
      xhr1.send(null);
  }
 
-function LEIA_setBackgroundPlane(filename, aspect) {
-    var foregroundPlaneTexture = new THREE.ImageUtils.loadTexture(filename);
-    foregroundPlaneTexture.wrapS = foregroundPlaneTexture.wrapT = THREE.RepeatWrapping;
-    foregroundPlaneTexture.repeat.set(1, 1);
 
-    //
-    var planeMaterial = new THREE.MeshPhongMaterial({
-        map: foregroundPlaneTexture,
-        color: 0xffdd99
-    });
-    var planeGeometry = new THREE.PlaneGeometry(100, 75, 10, 10);
-    plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    plane.position.z = -6;
-    plane.castShadow = false;
-    plane.receiveShadow = true;
-    scene.add(plane);
-}
 
 function LEIA_setCenterPlane(filename, aspect){
 	var LEIA_centerPlaneTexture = new THREE.ImageUtils.loadTexture( filename );
 	LEIA_centerPlaneTexture.wrapS = LEIA_centerPlaneTexture.wrapT = THREE.RepeatWrapping; 
 	LEIA_centerPlaneTexture.repeat.set( 1, 1 );
-	var LEIA_centerPlaneMaterial = new THREE.MeshPhongMaterial( { map: LEIA_centerPlaneTexture, transparent:true, side: THREE.DoubleSide } );
+	var LEIA_centerPlaneMaterial = new THREE.MeshPhongMaterial( { map: LEIA_centerPlaneTexture, transparent:true} );
 	var LEIA_centerPlaneGeometry;
 	if (aspect === undefined) {
 		LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(80, 60, 10, 10);
