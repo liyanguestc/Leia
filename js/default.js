@@ -107,7 +107,7 @@
       });*/
 
      //add background texture
-     var backgroundPlane = LEIA_createTexturePlane({
+     var backgroundPlane = Leia_createTexturePlane({
          filename: 'resource/world-map-background2.jpg',
          width: 100,
          height: 75
@@ -117,7 +117,7 @@
      backgroundPlane.receiveShadow = true;
      scene.add(backgroundPlane);
 
-     var centerPlane = LEIA_createTexturePlane({
+     var centerPlane = Leia_createTexturePlane({
          filename: 'resource/crack001.png',
          width: 100,
          height: 75,
