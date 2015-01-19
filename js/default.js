@@ -239,23 +239,3 @@ function addTextMenu(parameters){
      xhr1.responseType = "arraybuffer";
      xhr1.send(null);
  }
-
-
-
-function LEIA_setCenterPlane(filename, aspect){
-	var LEIA_centerPlaneTexture = new THREE.ImageUtils.loadTexture( filename );
-	LEIA_centerPlaneTexture.wrapS = LEIA_centerPlaneTexture.wrapT = THREE.RepeatWrapping; 
-	LEIA_centerPlaneTexture.repeat.set( 1, 1 );
-	var LEIA_centerPlaneMaterial = new THREE.MeshPhongMaterial( { map: LEIA_centerPlaneTexture, transparent:true} );
-	var LEIA_centerPlaneGeometry;
-	if (aspect === undefined) {
-		LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(80, 60, 10, 10);
-	} else {
-		LEIA_centerPlaneGeometry = new THREE.PlaneGeometry(10*aspect, 30, 10, 10);
-	}
-	LEIA_centerPlane = new THREE.Mesh(LEIA_centerPlaneGeometry, LEIA_centerPlaneMaterial);
-	LEIA_centerPlane.position.x = 0;
-	LEIA_centerPlane.position.y = 0;
-	LEIA_centerPlane.position.z = 0;
-	scene.add(LEIA_centerPlane);
-}
