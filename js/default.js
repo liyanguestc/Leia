@@ -75,15 +75,22 @@
  function addObjectsToScene() {
      //Add your objects here
      //add STL Object
-     addSTLModel({
-         path: 'resource/LEIA1.stl',
-         meshGroupName: 'LEIA1',
-         meshSizeX: 60,
-         meshSizeY: 60,
-         meshSizeZ: 60,
-         translateX: 0,
-         translateY: 0,
-         translateZ: 0,
+     Leia_LoadSTLModel({
+         path: 'resource/LEIA1.stl'
+     },function(mesh){
+       mesh.material.side = THREE.DoubleSide;
+       mesh.castShadow = true;
+       mesh.receiveShadow = true;
+       mesh.material.metal = true;
+       mesh.scale.set(60, 60, 60);
+       mesh.position.set(0, 0, 0);
+       var group = new THREE.Object3D();
+       group.add(mesh);
+       scene.add(group);
+       meshArray.push({
+         meshGroup: group,
+         name: 'LEIA1'
+       });
      });
 
      //Add Text
@@ -198,21 +205,9 @@
      scene.add(pl);
  }
 
- function addSTLModel(parameters) { //(filename, meshName, meshSize) {
+ function Leia_LoadSTLModel(parameters,callback) { 
      parameters = parameters || {};
      var path = parameters.path;
-     var meshSizeX = parameters.meshSizeX;
-     var meshSizeY = parameters.meshSizeY;
-     var meshSizeZ = parameters.meshSizeZ;
-     var tx = parameters.translateX;
-     var ty = parameters.translateY;
-     var tz = parameters.translateZ;
-     var meshName = parameters.meshGroupName;
-     if (parameters.meshSizeX === undefined || parameters.meshSizeY === undefined || parameters.meshSizeZ === undefined) {
-         meshSizeX = 1;
-         meshSizeY = 1;
-         meshSizeZ = 1;
-     }
      var xhr1 = new XMLHttpRequest();
      xhr1.onreadystatechange = function() {
          if (xhr1.readyState == 4) {
@@ -220,24 +215,16 @@
                  var rep = xhr1.response;
                  var mesh1;
                  mesh1 = parseStlBinary(rep, 0xffffff);
-                 mesh1.material.side = THREE.DoubleSide;
-                 mesh1.castShadow = true;
-                 mesh1.receiveShadow = true;
-                 mesh1.material.metal = true;
-                 mesh1.scale.set(meshSizeX, meshSizeY, meshSizeZ);
-                 mesh1.position.set(tx, ty, tz);
-                 var group = new THREE.Object3D();
-                 group.add(mesh1);
-                 scene.add(group);
-                 meshArray.push({
-                     meshGroup: group,
-                     name: meshName
-                 });
-                 // newMeshReady = true;
+                 callback(mesh1);
+             }else{
+               console.log("Leia_LoadSTLModel error: xhr1.status " + xhr1.status);
              }
+         }else{
+           console.log("Leia_LoadSTLModel error: xhr1.readyState " + xhr1.readyState);
          }
      };
      xhr1.onerror = function(e) {
+          console.log("Leia_LoadSTLModel error");
          console.log(e);
      };
      xhr1.open("GET", path, true);
