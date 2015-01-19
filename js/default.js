@@ -27,7 +27,6 @@
          compFac: _depthCompressionFactor,
          devicePixelRatio: 1
      });
-
      renderer.shadowMapEnabled = true;
      renderer.shadowMapSoft = true;
      Leia_addRender(renderer);
